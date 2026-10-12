@@ -11,9 +11,13 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Create tables
+    # Drop existing tables to avoid old schema conflicts
+    cursor.execute("DROP TABLE IF EXISTS checklists")
+    cursor.execute("DROP TABLE IF EXISTS clients")
+
+    # Create tables with correct schema including 'id'
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS clients (
+        CREATE TABLE clients (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             ssn TEXT NOT NULL,
@@ -23,7 +27,7 @@ def init_db():
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS checklists (
+        CREATE TABLE checklists (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             client_id INTEGER,
             tax_year INTEGER,
@@ -32,10 +36,6 @@ def init_db():
             FOREIGN KEY (client_id) REFERENCES clients (id)
         )
     """)
-
-    # Clear existing mock data to prevent duplicates on restart
-    cursor.execute("DELETE FROM checklists")
-    cursor.execute("DELETE FROM clients")
 
     # Seed 4 mock clients (multiple realistic profiles)
     mock_clients = [
