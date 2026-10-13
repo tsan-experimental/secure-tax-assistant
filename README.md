@@ -8,7 +8,7 @@ Built to demonstrate secure AI workflow design aligned with **FTC Safeguards Rul
 
 ## 🏗️ Architecture
 
-\`\`\`mermaid
+```mermaid
 graph TD
     UI[React + Vite Frontend] -->|HTTP| API[FastAPI Backend]
     API --> PG[Privacy Guardrail Layer]
@@ -19,7 +19,7 @@ graph TD
     PG --> OLL[Ollama — Local LLM]
     OLL -->|Markdown Organizer| API
     API -->|JSON| UI
-\`\`\`
+```   
 
 ### Layers
 
