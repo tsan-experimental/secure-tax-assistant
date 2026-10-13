@@ -15,6 +15,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
+from datetime import datetime, timezone
 
 from backend.privacy_guard import redact_pii, redact_pii_with_audit
 from backend.rag_organizer import generate_tax_organizer
@@ -93,6 +94,7 @@ def upload_document(payload: DocumentUploadPayload):
     Simulates uploading a missing tax document, parsing its contents,
     and updating the client's checklist status from Missing to Received.
     """
+    now = datetime.now(timezone.utc).isoformat()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -105,14 +107,14 @@ def upload_document(payload: DocumentUploadPayload):
 
     if not row:
         cursor.execute("""
-            INSERT INTO checklists (client_id, tax_year, document_name, status)
-            VALUES (?, ?, ?, 'Received')
-        """, (payload.client_id, payload.tax_year, payload.document_name))
+            INSERT INTO checklists (client_id, tax_year, document_name, status, received_at)
+            VALUES (?, ?, ?, 'Received', ?)
+        """, (payload.client_id, payload.tax_year, payload.document_name, now))
     else:
         cursor.execute("""
-            UPDATE checklists SET status = 'Received'
+            UPDATE checklists SET status = 'Received', received_at = ?
             WHERE client_id = ? AND tax_year = ? AND document_name = ?
-        """, (payload.client_id, payload.tax_year, payload.document_name))
+        """, (now, payload.client_id, payload.tax_year, payload.document_name))
 
     conn.commit()
     conn.close()
@@ -123,6 +125,7 @@ def upload_document(payload: DocumentUploadPayload):
         "message": f"Successfully ingested {payload.document_name} for Tax Year {payload.tax_year}!",
         "client_id": payload.client_id,
         "status": "Received",
+        "received_at": now,
         "extracted_preview": cleaned_preview,
     }
 
@@ -139,6 +142,7 @@ def trigger_lookup(payload: TriggerPayload):
     cursor.execute("""
         SELECT tax_year, document_name FROM checklists
         WHERE client_id = ? AND status = 'Missing'
+        ORDER BY tax_year, document_name
     """, (payload.client_id,))
     missing = cursor.fetchall()
     conn.close()
@@ -151,12 +155,12 @@ def trigger_lookup(payload: TriggerPayload):
         recommendations.append("Check for CP2000 / CP2100 notice type.")
         recommendations.append("Escalate to senior preparer if balance > $5,000.")
     elif "w-2" in phrase_lower:
-        w2_missing = [f"{y}" for y, d in missing if "w-2" in d.lower()]
-        recommendations.append(f"Outstanding W-2s: {w2_missing if w2_missing else 'None tracked'}")
+        w2_missing = [f"{y} — {d}" for y, d in missing if "w-2" in d.lower()]
+        recommendations.append(f"Outstanding W-2s: {', '.join(w2_missing) if w2_missing else 'None tracked'}")
         recommendations.append("Offer client the e-verify W-2 request option.")
     elif "1099" in phrase_lower:
-        form_1099_missing = [f"{y}" for y, d in missing if "1099" in d.lower()]
-        recommendations.append(f"Outstanding 1099s: {form_1099_missing if form_1099_missing else 'None tracked'}")
+        form_1099_missing = [f"{y} — {d}" for y, d in missing if "1099" in d.lower()]
+        recommendations.append(f"Outstanding 1099s: {', '.join(form_1099_missing) if form_1099_missing else 'None tracked'}")
         recommendations.append("Send client the 1099 substitution letter template.")
     else:
         recommendations.append("No specific trigger matched. Review transcript manually.")
@@ -176,8 +180,9 @@ def client_status(client_id: int):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT document_name, tax_year, status FROM checklists
+        SELECT document_name, tax_year, status, received_at FROM checklists
         WHERE client_id = ?
+        ORDER BY tax_year, document_name
     """, (client_id,))
     rows = cursor.fetchall()
     conn.close()
@@ -190,6 +195,6 @@ def client_status(client_id: int):
         "progress": f"{received}/{total}",
         "percent": int((received / total) * 100) if total else 0,
         "checklist": [
-            {"doc": r[0], "year": r[1], "status": r[2]} for r in rows
+            {"doc": r[0], "year": r[1], "status": r[2], "received_at": r[3]} for r in rows
         ],
     }   

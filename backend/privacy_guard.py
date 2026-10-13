@@ -56,6 +56,7 @@ PII_PATTERNS: list[Pattern] = [
     ),
     # Bank / routing account numbers — 8 to 17 consecutive digits
     # (will also catch routing numbers; acceptable tradeoff for tax context)
+    # Production: replace with Presidio NER for context-aware detection.
     Pattern(
         name="ACCOUNT_NUMBER",
         regex=r"(?<!\d)\d{8,17}(?!\d)",
@@ -109,6 +110,9 @@ def redact_pii_with_audit(
     """
     Redact PII and return a RedactionResult containing the cleaned text
     plus a list of findings (type, original value, position) for audit logging.
+
+    FIX: findings are scanned on the progressively-cleaning string so that
+    a value already replaced by an earlier pattern is not double-counted.
     """
     if patterns is None:
         patterns = PII_PATTERNS
@@ -117,7 +121,7 @@ def redact_pii_with_audit(
     cleaned = text
 
     for p in patterns:
-        for match in re.finditer(p.regex, text, p.flags):
+        for match in re.finditer(p.regex, cleaned, p.flags):
             findings.append({
                 "type": p.name,
                 "original": match.group(),
@@ -140,7 +144,7 @@ if __name__ == "__main__":
         "Bank: 45210000001234567\n"
         "DOB: 03/14/1985\n"
         "Address: 123 Main St, Springfield, IL 62704\n"
-        "DL: IL-AB1234567\n"
+        "DL: IL-1234567\n"
     )
 
     result = redact_pii_with_audit(sample)
