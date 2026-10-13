@@ -1,6 +1,3 @@
-python -c "
-import textwrap
-content = textwrap.dedent('''
 # 🔒 Secure Tax Assistant — Local Privacy Gateway & RAG Organizer
 
 A full-stack, **privacy-first** portfolio project that simulates the core workflows of a secure tax intake operation: PII redaction before LLM processing, multi-year tax organizer generation via a local LLM, real-time sales-assistant trigger lookup, and automated document ingestion with live progress tracking.
@@ -229,8 +226,3 @@ Each client has a mix of \`Received\` and \`Missing\` documents to exercise all 
 ## 📝 License
 
 MIT — for portfolio and educational use.
-''').strip()
-with open('README.md', 'w', encoding='utf-8') as f:
-    f.write(content)
-print('README.md written successfully.')
-"   
