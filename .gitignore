@@ -1,4 +1,18 @@
+# Python
 venv/
+.venv/
 __pycache__/
 *.pyc
+
+# Generated data
+data/
+
+# Environment
 .env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Audit script
+audit.sh   
