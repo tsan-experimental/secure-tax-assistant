@@ -117,7 +117,7 @@ function OrganizerTab({ clientId }) {
               li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />,
               p:  ({ node, ...props }) => <p style={{ margin: '0.5rem 0', lineHeight: '1.6' }} {...props} />,
             }}
-          >
+            >
             {organizer}
           </ReactMarkdown>
         </div>
