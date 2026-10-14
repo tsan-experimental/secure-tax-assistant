@@ -94,7 +94,7 @@ secure-tax-assistant/
 fastapi==0.115.0
 uvicorn==0.31.0
 pydantic==2.9.2
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 ollama==0.3.3
 ```
 
