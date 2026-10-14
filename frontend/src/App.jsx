@@ -111,11 +111,11 @@ function OrganizerTab({ clientId }) {
         <div style={cardStyle}>
           <ReactMarkdown
             components={{
-              h1: ({ node, ...props }) => <h1 style={{ fontSize: '1.4rem', margin: '1rem 0 0.5rem 0' }} {...props} />,
-              h2: ({ node, ...props }) => <h2 style={{ fontSize: '1.15rem', margin: '1rem 0 0.5rem 0', color: '#0066cc' }} {...props} />,
-              ul: ({ node, ...props }) => <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0' }} {...props} />,
-              li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />,
-              p:  ({ node, ...props }) => <p style={{ margin: '0.5rem 0', lineHeight: '1.6' }} {...props} />,
+              h1: ({ node: _node, ...props }) => <h1 style={{ fontSize: '1.4rem', margin: '1rem 0 0.5rem 0' }} {...props} />,
+              h2: ({ node: _node, ...props }) => <h2 style={{ fontSize: '1.15rem', margin: '1rem 0 0.5rem 0', color: '#0066cc' }} {...props} />,
+              ul: ({ node: _node, ...props }) => <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0' }} {...props} />,
+              li: ({ node: _node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />,
+              p:  ({ node: _node, ...props }) => <p style={{ margin: '0.5rem 0', lineHeight: '1.6' }} {...props} />,
             }}
             >
             {organizer}
@@ -326,7 +326,7 @@ function ProgressTab({ clientId }) {
     }
   }, [clientId]);
 
-  useEffect(() => { fetchStatus(); }, [fetchStatus]);
+  useEffect(() => { fetchStatus(); }, [fetchStatus]);   
 
   if (error) return <div style={errorStyle}>{error}</div>;
   if (!data) return <p>Loading…</p>;
