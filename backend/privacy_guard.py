@@ -45,7 +45,7 @@ PII_PATTERNS: list[Pattern] = [
     # Phone — (555) 123-4567, 555-123-4567, 555.123.4567, 5551234567
     Pattern(
         name="PHONE",
-        regex=r"\b(?:\(?[\d]{3}\)?[\s.-]?)?[\d]{3}[\s.-]?[\d]{4}\b",
+        regex=r"\b(?:\(?[\d]{3}\)?[\s.-]?)[\d]{3}[\s.-]?[\d]{4}\b",
         replacement="[REDACTED_PHONE]",
     ),
     # Email
