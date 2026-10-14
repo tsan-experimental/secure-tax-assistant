@@ -123,9 +123,10 @@ sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt update
 sudo apt install -y python3.12 python3.12-venv python3.12-dev
 # Node.js 20+ via nvm:
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
+source ~/.bashrc
 nvm install 20
-nvm use 20
+nvm use 20   
 ```
 
 ### Step 2: Install Ollama & Pull a Model
