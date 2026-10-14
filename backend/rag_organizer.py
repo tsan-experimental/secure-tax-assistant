@@ -39,7 +39,8 @@ def generate_tax_organizer(client_id: int) -> str:
         for t in tax_years
     ]) or "  (no tax year data on file)"
 
-    prompt = f"""You are an automated tax document reporting system. Produce a clean text report for client record reference.
+    prompt = f"""You are an automated tax document reporting system.
+Produce a clean text report for client record reference.
 
 STRICT FORMATTING RULES:
 - Do NOT use bolding stars (**).
@@ -97,4 +98,4 @@ Structure:
 
 if __name__ == "__main__":
     result = generate_tax_organizer(1)
-    print(result)   
+    print(result)

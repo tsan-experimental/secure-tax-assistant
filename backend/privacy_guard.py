@@ -153,4 +153,4 @@ if __name__ == "__main__":
     print(result.redacted_text)
     print(f"\n═══ AUDIT LOG ({result.count} findings) ═══")
     for f in result.findings:
-        print(f"  [{f['type']}] {f['original']}  (pos {f['start']}–{f['end']})")   
+        print(f"  [{f['type']}] {f['original']}  (pos {f['start']}–{f['end']})")

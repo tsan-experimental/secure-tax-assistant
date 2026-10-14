@@ -3,6 +3,7 @@ import os
 
 DB_PATH = "data/tax_clients.db"
 
+
 def init_db():
     """
     Initializes the SQLite database with clients, tax years, and document status checklists.
@@ -88,7 +89,8 @@ def init_db():
         (4, 2025, 118700.00, "married_filing_jointly", "Global Logistics LLC", "W-2 + dividends + 529 contribution"),
     ]
     cursor.executemany(
-        "INSERT INTO tax_years (client_id, tax_year, gross_income, filing_status, employer, notes) VALUES (?,?,?,?,?,?)",
+        "INSERT INTO tax_years (client_id, tax_year, gross_income, filing_status, employer, notes)"
+        " VALUES (?,?,?,?,?,?)",
         mock_tax_years,
     )
 
@@ -135,5 +137,6 @@ def init_db():
     conn.close()
     print("Database initialized and seeded with 4 mock clients successfully!")
 
+
 if __name__ == "__main__":
-    init_db()   
+    init_db()

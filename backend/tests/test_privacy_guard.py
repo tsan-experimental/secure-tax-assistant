@@ -1,11 +1,9 @@
 """Unit tests for backend.privacy_guard — PII redaction engine."""
 
-import pytest
 from backend.privacy_guard import (
     redact_pii,
     redact_pii_with_audit,
     RedactionResult,
-    PII_PATTERNS,
 )
 
 
@@ -177,4 +175,4 @@ class TestEdgeCases:
         assert "DOB" in types_found
         assert "ZIP" in types_found
         assert "DL_NUMBER" in types_found
-        assert "John Smith" in result.redacted_text   
+        assert "John Smith" in result.redacted_text

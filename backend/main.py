@@ -160,7 +160,8 @@ def trigger_lookup(payload: TriggerPayload):
         recommendations.append("Offer client the e-verify W-2 request option.")
     elif "1099" in phrase_lower:
         form_1099_missing = [f"{y} — {d}" for y, d in missing if "1099" in d.lower()]
-        recommendations.append(f"Outstanding 1099s: {', '.join(form_1099_missing) if form_1099_missing else 'None tracked'}")
+        outstanding = ', '.join(form_1099_missing) if form_1099_missing else 'None tracked'
+        recommendations.append(f"Outstanding 1099s: {outstanding}")
         recommendations.append("Send client the 1099 substitution letter template.")
     else:
         recommendations.append("No specific trigger matched. Review transcript manually.")
@@ -197,4 +198,4 @@ def client_status(client_id: int):
         "checklist": [
             {"doc": r[0], "year": r[1], "status": r[2], "received_at": r[3]} for r in rows
         ],
-    }   
+    }

@@ -85,4 +85,4 @@ if __name__ == "__main__":
     print(f"  Tax Years: {len(data['tax_years'])} records")
     print(f"  Checklists: {len(data['checklists'])} items")
     missing = [c for c in data['checklists'] if c['status'] == 'Missing']
-    print(f"  Missing docs: {len(missing)}")   
+    print(f"  Missing docs: {len(missing)}")
